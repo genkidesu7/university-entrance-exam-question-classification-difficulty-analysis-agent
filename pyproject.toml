@@ -1,0 +1,58 @@
+[project]
+name = "EDU-C2-029"
+version = "0.1.0"
+description = "University Entrance Exam Question Classification & Difficulty Analysis Agent — classifies past exam questions by MEXT curriculum domain, Bloom's taxonomy level, and difficulty, producing distribution and gap-analysis reports"
+requires-python = ">=3.11"
+# agenticstar-agentcore is served by the internal package registry, not public PyPI:
+# install with --extra-index-url pointing at it.
+# The version here must match AGENTCORE_WHEEL_SPEC in agenticstar-deploy/run_build_agent.sh.
+# The openai extra provides langchain_openai (AzureOpenAIClient); marketplace is
+# required by cli.py's run_agent_marketplace(). pyyaml: PB-7 reads config/config.yaml.
+dependencies = [
+    "agenticstar-agentcore[openai,marketplace]==1.0.3",
+    "python-dotenv==1.2.2",
+    "pyyaml==6.0.1",
+]
+
+[tool.uv]
+# agenticstar-agentcore's published package-index metadata can pin a
+# langchain-core version incompatible with what its own "openai" extra
+# (-> langchain-openai) requires, which makes resolution fail on the
+# registry install path only. Force the
+# SDK-compatible version the agentcore release actually ships with; re-verify
+# this pin if the agenticstar-agentcore version above ever changes.
+override-dependencies = [
+    "langchain-core==1.5.4",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.0.3",
+    "pytest-cov==5.0.0",
+    "pytest-asyncio==1.4.0",
+    "ruff==0.4.4",
+    "mypy==1.10.0",
+]
+
+[build-system]
+requires = ["setuptools==68.2.2"]
+build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+# The internal agenticstar-agentcore/shared packages ship no py.typed marker, so every
+# framework base class resolves to Any under strict's disallow_subclassing_any.
+# Scoped opt-out of that one flag only; every other strict check still applies to src/.
+disallow_subclassing_any = false
+
+[[tool.mypy.overrides]]
+module = ["framework.*", "shared.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "strict"

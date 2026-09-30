@@ -1,0 +1,30 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+.env
+*.egg
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+env/
+# Local-only reference files placed at scaffold init time — never tracked.
+CLAUDE.md
+security_rules/
+ci_stubs/
+MANIFEST.md
+scaffold/
+development-cycle/
+.claude/
+src/examples/
+sdk/
+scaffold/
+stage5_evidence/
+# Local deploy toolchain and test kit (hold registry/credential settings) — never tracked.
+agenticstar-deploy/
+run-local/
